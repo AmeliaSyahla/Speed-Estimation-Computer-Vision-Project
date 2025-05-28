@@ -69,7 +69,7 @@ def main():
     num_expected_points = len(img_pts)
     print(f"Number of image points loaded: {num_expected_points}")
 
-    world_pts = None # Initialize world_pts
+    world_pts = None 
 
     if vid == "1" and num_expected_points == 12:
         print("Defining world_points manually for Video ID 1 (12 points).")
@@ -80,41 +80,36 @@ def main():
         ], dtype="float32")
     elif vid == "2" and num_expected_points == 14: 
         print("Defining world_points manually for Video ID 2 (14 points).") 
-        # GANTI INI DENGAN 14 KOORDINAT DUNIA ANDA YANG SEBENARNYA untuk vid 2
+        # TIITIK JARAK METER GROUND TRUTH (DUMMY WORLD PTS)
         world_pts = np.array([
-            # Contoh untuk 14 titik (7 per sisi):
-            # Sisi Kiri (7 titik, sesuaikan dengan urutan '2dpts' Anda)
+            # Left
             [0.0, 50.0], [10.0, 45.0], [20.0, 40.0], [30.0, 35.0],
             [40.0, 30.0], [50.0, 25.0], [60.0, 20.0],
-            # Sisi Kanan (7 titik, sesuaikan dengan urutan '2dpts' Anda)
+            # Right
             [0.0, 0.0], [10.0, 0.0], [20.0, 0.0], [30.0, 0.0],
             [40.0, 0.0], [50.0, 0.0], [60.0, 0.0]
         ], dtype="float32")
     elif vid == "3":
-        # JIKA ANOTASI ANDA UNTUK VID 3 ADALAH 10 TITIK (seperti image_da0d50.jpg)
+        # FOR VID 3 IF 3 point Dummy Data
         if num_expected_points == 10:
             print(f"Defining world_points manually for Video ID 3 ({num_expected_points} points).")
-            # GANTI INI DENGAN 10 KOORDINAT DUNIA ANDA YANG SEBENARNYA untuk video 3
-            # Pastikan urutannya sesuai dengan 2dpts Anda!
             world_pts = np.array([
-                [0.0, 30.0], [10.0, 25.0], [20.0, 20.0], [30.0, 15.0], [40.0, 10.0], # Contoh 5 titik sisi kiri
-                [0.0, 0.0], [10.0, 0.0], [20.0, 0.0], [30.0, 0.0], [40.0, 0.0]    # Contoh 5 titik sisi kanan
+                [0.0, 30.0], [10.0, 25.0], [20.0, 20.0], [30.0, 15.0], [40.0, 10.0], # Left
+                [0.0, 0.0], [10.0, 0.0], [20.0, 0.0], [30.0, 0.0], [40.0, 0.0]    # Right
             ], dtype="float32")
-        # JIKA ANDA TETAP DENGAN 13 TITIK UNTUK VID 3 (perlu anotasi ulang 2D & 3D points)
         elif num_expected_points == 13:
             print(f"Defining world_points manually for Video ID 3 ({num_expected_points} points).")
-            # GANTI INI DENGAN 13 KOORDINAT DUNIA ANDA YANG SEBENARNYA untuk video 3
             world_pts = np.array([
-                [0.0, 0.0], [5.0, 0.0], [10.0, 0.0], [15.0, 0.0], [20.0, 0.0], # Baris 1
-                [0.0, 8.0], [5.0, 8.0], [10.0, 8.0], [15.0, 8.0], [20.0, 8.0], # Baris 2
-                [0.0, 16.0], [5.0, 16.0], [10.0, 16.0]                         # Baris 3
+                [0.0, 0.0], [5.0, 0.0], [10.0, 0.0], [15.0, 0.0], [20.0, 0.0], 
+                [0.0, 8.0], [5.0, 8.0], [10.0, 8.0], [15.0, 8.0], [20.0, 8.0], 
+                [0.0, 16.0], [5.0, 16.0], [10.0, 16.0]                         
             ], dtype="float32")
         else:
             print(f"Error: For Video ID '{vid}', loaded {num_expected_points} image points.")
             print(f"Manual definition for vid == '3' in this script expects 10 or 13 points.")
             print(f"Please adjust the condition or check your 2dpts in points.json for video 3.")
             sys.exit(1)
-    else: # Untuk video ID lain yang tidak didefinisikan secara manual di atas
+    else: 
         if world_pts_from_json.size > 0 and len(world_pts_from_json) == num_expected_points:
             print("Using world_pts loaded from JSON.")
             world_pts = world_pts_from_json
@@ -125,7 +120,7 @@ def main():
             print("Please update points.json or add/correct the manual definition in 03_calib_homography.py main().")
             sys.exit(1)
 
-    if world_pts is None: # Pemeriksaan akhir jika world_pts tidak terdefinisi
+    if world_pts is None: 
         print(f"CRITICAL ERROR: world_pts was not assigned for video ID '{vid}' with {num_expected_points} points. Review logic for defining world_pts.")
         sys.exit(1)
     if len(img_pts) != len(world_pts):
@@ -151,75 +146,66 @@ def main():
     try:
         if os.path.exists(OUTPUT_HOMOGRAPHY_PATH):
             with open(OUTPUT_HOMOGRAPHY_PATH, 'r') as f: allH = json.load(f)
-    except Exception as e: # Menangkap error decode JSON atau lainnya
+    except Exception as e: 
         print(f"Warning: Could not decode/load {OUTPUT_HOMOGRAPHY_PATH}: {e}. Starting with an empty homography dictionary.")
-        allH = {} # Pastikan allH adalah dict kosong jika gagal load
+        allH = {} 
     allH[vid] = H.tolist()
     with open(OUTPUT_HOMOGRAPHY_PATH,"w") as f: json.dump(allH, f, indent=4)
     print("Saved homography to", OUTPUT_HOMOGRAPHY_PATH)
 
-    # --- ANNOTASI GAMBAR ---
+    # --- IMAGE ANNOTATE ---
     img_to_annotate, frame_path = load_first_frame(vid)
     if img_to_annotate is not None:
         out_image = img_to_annotate.copy()
 
-        # 1. Gambar titik-titik gambar asli (lingkaran kuning dengan label "I")
         for i, (x, y) in enumerate(img_pts):
-            cv2.circle(out_image, (int(x), int(y)), 7, (0, 255, 255), -1) # Kuning
+            cv2.circle(out_image, (int(x), int(y)), 7, (0, 255, 255), -1) 
             cv2.putText(out_image, f"I{i}", (int(x) + 8, int(y) - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
             cv2.putText(out_image, f"I{i}", (int(x) + 8, int(y) - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
 
-        # 2. Proyeksikan titik dunia ke bidang gambar menggunakan homografi H (jika ada world_pts)
-        if len(world_pts) > 0: # Pastikan world_pts ada dan tidak kosong
+        # 2. Projecting this to your world homography
+        if len(world_pts) > 0: 
             world_pts_reshaped = world_pts.reshape(-1, 1, 2)
             projected_image_pts_cv = cv2.perspectiveTransform(world_pts_reshaped, H)
 
             if projected_image_pts_cv is not None:
                 for i, pt_proj_cv in enumerate(projected_image_pts_cv):
                     x_proj, y_proj = int(pt_proj_cv[0][0]), int(pt_proj_cv[0][1])
-                    cv2.circle(out_image, (x_proj, y_proj), 8, (255, 100, 0), 2) # Lingkaran luar biru
-                    cv2.circle(out_image, (x_proj, y_proj), 5, (0, 0, 255), -1)   # Lingkaran dalam merah
+                    cv2.circle(out_image, (x_proj, y_proj), 8, (255, 100, 0), 2) 
+                    cv2.circle(out_image, (x_proj, y_proj), 5, (0, 0, 255), -1)  
                     cv2.putText(out_image, f"P{i}", (x_proj + 8, y_proj - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 2)
                     cv2.putText(out_image, f"P{i}", (x_proj + 8, y_proj - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 1)
 
-        # --- MODIFIKASI PENGGAMBARAN GRID JALAN ---
-        if len(img_pts) >= 4 and len(img_pts) % 2 == 0: # Cek jumlah titik genap dan minimal 4
+        # --- MODIFICATE DRAWING ROAD---
+        if len(img_pts) >= 4 and len(img_pts) % 2 == 0: 
             num_total_pts = len(img_pts)
             num_pts_per_edge = num_total_pts // 2
             print(f"Menggambar grid perspektif jalan menggunakan {num_total_pts} titik gambar ({num_pts_per_edge} per sisi).")
             pts_int = img_pts.astype(np.int32)
 
-            color_longitudinal = (255, 255, 0)  # Cyan (Biru kehijauan)
-            color_transversal = (0, 255, 255)   # Kuning
+            color_longitudinal = (255, 255, 0)  
+            color_transversal = (0, 255, 255)   
             thickness = 2
 
-            # 1. Gambar garis sepanjang tepi kiri jalan
+            # 1. Draw line in left road
             for i in range(num_pts_per_edge - 1):
                 pt1 = tuple(pts_int[i])
                 pt2 = tuple(pts_int[i+1])
                 cv2.line(out_image, pt1, pt2, color_longitudinal, thickness)
 
-            # 2. Gambar garis sepanjang tepi kanan jalan
+            # 2. Draw line in right road
             for i in range(num_pts_per_edge - 1):
                 idx1 = num_pts_per_edge + i
                 idx2 = num_pts_per_edge + i + 1
                 pt1 = tuple(pts_int[idx1])
                 pt2 = tuple(pts_int[idx2])
                 cv2.line(out_image, pt1, pt2, color_longitudinal, thickness)
-
-            # 3. Gambar garis melintang/transversal
-            for i in range(num_pts_per_edge):
-                idx_left = i
-                idx_right = (num_total_pts - 1) - i
-                pt1 = tuple(pts_int[idx_left])
-                pt2 = tuple(pts_int[idx_right])
-                cv2.line(out_image, pt1, pt2, color_transversal, thickness)
+                
         else:
             print(f"Peringatan: Jumlah titik gambar adalah {len(img_pts)}. Grid perspektif tidak digambar (membutuhkan jumlah titik genap >= 4).")
-        # --- AKHIR MODIFIKASI PENGGAMBARAN GRID JALAN ---
 
         os.makedirs(ANNOTATED_FRAMES_DIR, exist_ok=True)
-        out_path = os.path.join(ANNOTATED_FRAMES_DIR, f"vid_{vid}_annot_grid.jpg") # Nama file output yang lebih spesifik
+        out_path = os.path.join(ANNOTATED_FRAMES_DIR, f"vid_{vid}_annot_grid.jpg") 
         try:
             cv2.imwrite(out_path, out_image)
             print("Annotated image saved to", out_path)
