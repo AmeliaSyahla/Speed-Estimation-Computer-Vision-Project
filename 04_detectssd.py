@@ -51,15 +51,11 @@ def convert_bbox_to_z(bbox):
     return np.array([x, y, s, r]).reshape((4, 1))
 
 def convert_x_to_bbox(x):
-    # Handle potential non-positive values from Kalman filter state for area or aspect ratio
-    # Ensure area (x[2]) and aspect_ratio (x[3]) are non-negative before sqrt
-    # and area is positive before division
     area = x[2]
     aspect_ratio = x[3]
 
     if area < 0: area = 0
-    if aspect_ratio < 0: aspect_ratio = 0 # Or handle as an error/invalid state
-
+    if aspect_ratio < 0: aspect_ratio = 0 
     w = np.sqrt(area * aspect_ratio) if area * aspect_ratio >= 0 else 0
     h = area / w if w != 0 and area >= 0 else 0
     
@@ -71,16 +67,16 @@ class KalmanBoxTracker(object):
     def __init__(self, bbox_xyxy, class_id, label_name, score):
         self.kf = KalmanFilter(dim_x=7, dim_z=4)
         self.kf.F = np.array([[1,0,0,0,1,0,0],
-                              [0,1,0,0,0,1,0],
-                              [0,0,1,0,0,0,1],
-                              [0,0,0,1,0,0,0],
-                              [0,0,0,0,1,0,0],
-                              [0,0,0,0,0,1,0],
-                              [0,0,0,0,0,0,1]])
+                            [0,1,0,0,0,1,0],
+                            [0,0,1,0,0,0,1],
+                            [0,0,0,1,0,0,0],
+                            [0,0,0,0,1,0,0],
+                            [0,0,0,0,0,1,0],
+                            [0,0,0,0,0,0,1]])
         self.kf.H = np.array([[1,0,0,0,0,0,0],
-                              [0,1,0,0,0,0,0],
-                              [0,0,1,0,0,0,0],
-                              [0,0,0,1,0,0,0]])
+                            [0,1,0,0,0,0,0],
+                            [0,0,1,0,0,0,0],
+                            [0,0,0,1,0,0,0]])
 
         self.kf.R[2:,2:] *= 10.
         self.kf.P[4:,4:] *= 1000.
@@ -107,15 +103,15 @@ class KalmanBoxTracker(object):
         self.hits += 1
         self.hit_streak += 1
         self.kf.update(convert_bbox_to_z(bbox_xyxy))
-        self.class_id = class_id # Update class and score if it changes (e.g. re-identification)
+        self.class_id = class_id
         self.label_name = label_name
         self.score = score
 
     def predict(self):
-        if (self.kf.x[2] + self.kf.x[6]) <= 0: # x[2] is area (s), x[6] is change in area (ds)
-             self.kf.x[6] *= 0.0 # If predicted area is non-positive, stop changing area rate
-        # Ensure area itself isn't negative before prediction if possible, or handle in convert_x_to_bbox
-        if self.kf.x[2] < 0: self.kf.x[2] = 0 # Prevent negative area state
+        if (self.kf.x[2] + self.kf.x[6]) <= 0: 
+             self.kf.x[6] *= 0.0 
+    
+        if self.kf.x[2] < 0: self.kf.x[2] = 0 
 
         self.kf.predict()
         self.age += 1
@@ -136,15 +132,15 @@ class Sort(object):
         self.iou_threshold = iou_threshold
         self.trackers = []
         self.frame_count = 0
-        KalmanBoxTracker.count = 1 # Reset ID counter for each Sort instance
+        KalmanBoxTracker.count = 1 
 
     def update(self, detections_in_frame):
         self.frame_count += 1
         dets_boxes = []
-        dets_info = [] # Store all info including score
+        dets_info = [] 
         for det in detections_in_frame:
             dets_boxes.append(det['box'])
-            # Store class_id, label, and score together
+            
             dets_info.append({'class_id': det['class_id'], 'label': det['label'], 'score': det['score']})
 
         dets_boxes = np.array(dets_boxes) if len(dets_boxes) > 0 else np.empty((0, 4))
@@ -154,18 +150,11 @@ class Sort(object):
         predicted_boxes_for_iou = []
 
         for i in range(len(self.trackers)):
-            predicted_box = self.trackers[i].predict()[0] # predict() is called here
+            predicted_box = self.trackers[i].predict()[0] 
             if not np.any(np.isnan(predicted_box)):
                 active_trackers_indices.append(i)
                 predicted_boxes_for_iou.append(predicted_box)
-            # If prediction is NaN, this tracker is implicitly not considered for matching in this frame
-            # and will continue to age. It will be removed later by the max_age logic if it doesn't recover.
-        
-        # Update self.trackers to only include those that had valid predictions for matching purposes
-        # This means indices for matching will refer to this filtered list indirectly or directly.
-        # For simplicity, we'll operate on the full self.trackers list and use active_trackers_indices
-        # to map back or filter. A cleaner way is to update self.trackers here.
-
+                
         current_active_trackers = [self.trackers[i] for i in active_trackers_indices]
         if len(predicted_boxes_for_iou) > 0:
             trks_predicted_boxes_for_iou = np.asarray(predicted_boxes_for_iou)
@@ -173,12 +162,12 @@ class Sort(object):
             trks_predicted_boxes_for_iou = np.empty((0, 4))
 
         # 2. Associate detections with tracker predictions using Hungarian Algorithm
-        matched_indices = [] # Tuples of (detection_idx, active_tracker_list_idx)
+        matched_indices = [] 
         if dets_boxes.shape[0] > 0 and trks_predicted_boxes_for_iou.shape[0] > 0:
             iou_matrix = iou_batch(dets_boxes, trks_predicted_boxes_for_iou)
             iou_matrix[iou_matrix < self.iou_threshold] = 0.0
             
-            # Hungarian algorithm: row_ind for detections, col_ind for (active) trackers
+            # Hungarian algorithm
             row_ind, col_ind = linear_sum_assignment(-iou_matrix) 
             
             for r, c in zip(row_ind, col_ind):
@@ -186,24 +175,21 @@ class Sort(object):
                     matched_indices.append((r, c))
 
         unmatched_detections = [d for d in range(dets_boxes.shape[0])]
-        # Indices in col_ind refer to the `current_active_trackers` list
         unmatched_trackers_active_list_indices = [t for t in range(len(current_active_trackers))]
 
         for r, c in matched_indices:
             if r in unmatched_detections:
-                 unmatched_detections.remove(r)
+                unmatched_detections.remove(r)
             if c in unmatched_trackers_active_list_indices:
-                 unmatched_trackers_active_list_indices.remove(c)
+                unmatched_trackers_active_list_indices.remove(c)
         
         # 3. Update matching trackers
-        # `c` in matched_indices is an index into `current_active_trackers`
         for r_det_idx, c_active_trk_idx in matched_indices:
-            # Get the original tracker instance from current_active_trackers
             trk_to_update = current_active_trackers[c_active_trk_idx]
             trk_to_update.update(dets_boxes[r_det_idx, :],
-                                 dets_info[r_det_idx]['class_id'],
-                                 dets_info[r_det_idx]['label'],
-                                 dets_info[r_det_idx]['score'])
+                                dets_info[r_det_idx]['class_id'],
+                                dets_info[r_det_idx]['label'],
+                                dets_info[r_det_idx]['score'])
 
         # 4. Create new trackers for unmatched detections
         newly_created_trackers = []
@@ -214,34 +200,23 @@ class Sort(object):
             newly_created_trackers.append(trk)
 
         # 5. Consolidate trackers and delete old ones, then filter output
-        # Start with trackers that were matched or were unmatched but still active
         next_frame_trackers = []
-        
-        # Add updated matched trackers (they are already in current_active_trackers and updated in place)
-        # Add active unmatched trackers (they just aged)
         for active_trk_idx in unmatched_trackers_active_list_indices:
-            # These trackers were not matched, so they just aged via predict()
-            pass # They are already part of current_active_trackers
+            pass 
 
-        # Consolidate all potentially live trackers: those in current_active_trackers + newly_created_trackers
         all_potential_trackers = current_active_trackers + newly_created_trackers
         
         ret = []
         final_trackers_for_next_frame = []
 
         for trk in all_potential_trackers:
-            # The state for output should be the *current* state
             current_bbox = trk.get_state()[0]
-            
-            # Condition for outputting a track in the current frame
-            # (trk.time_since_update < 1) means it was updated in this frame or is new
-            # (trk.hits >= self.min_hits or self.frame_count <= self.min_hits) ensures enough evidence or beginning of video
+
             if (trk.time_since_update == 0 and trk.hits >= self.min_hits) or \
-               (self.frame_count <= self.min_hits and trk.hits > 0): # Adjusted logic slightly for new tracks early on
+            (self.frame_count <= self.min_hits and trk.hits > 0):
                 ret.append(np.concatenate((current_bbox,
-                                           [trk.id, trk.class_id, trk.score, trk.label_name])).reshape(1,-1))
+                                        [trk.id, trk.class_id, trk.score, trk.label_name])).reshape(1,-1))
             
-            # Condition for keeping a track for the next frame
             if trk.time_since_update <= self.max_age:
                 final_trackers_for_next_frame.append(trk)
         
@@ -249,7 +224,7 @@ class Sort(object):
 
         if len(ret) > 0:
             return np.concatenate(ret)
-        return np.empty((0, 8)) # Ensure consistent shape (8 columns: x1,y1,x2,y2,id,class_id,score,label)
+        return np.empty((0, 8)) 
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 print(f"Menggunakan device: {device}")
@@ -261,13 +236,11 @@ try:
     preprocess_transform = weights.transforms()
 except AttributeError:
     print("Menggunakan metode fallback untuk memuat model (mungkin tanpa weights.transforms())")
-    model = torchvision.models.detection.ssd300_vgg16(weights="SSD300_VGG16_COCO_V1") # Use string for weights in older torchvision
-    # Fallback transform if weights.transforms() is not available
-    # Ensure this transform is appropriate for ssd300_vgg16
+    model = torchvision.models.detection.ssd300_vgg16(weights="SSD300_VGG16_COCO_V1") 
     preprocess_transform = torchvision.transforms.Compose([
-        torchvision.transforms.Resize((300, 300)), # SSD300 expects 300x300 input
+        torchvision.transforms.Resize((300, 300)), 
         torchvision.transforms.ToTensor(),
-        torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) # Standard ImageNet normalization
+        torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) 
     ])
     print("PERINGATAN: Menggunakan transformasi manual. Pastikan ini sesuai.")
 
@@ -290,8 +263,7 @@ COCO_INSTANCE_CATEGORY_NAMES = [
     'clock', 'vase', 'scissors', 'teddy bear', 'hair drier', 'toothbrush'
 ]
 
-# --- MODIFICATION 1: Add 'motorcycle' and other desired classes ---
-TARGET_CLASS_NAMES = ['car', 'bus', 'truck', 'motorcycle'] # Added 'motorcycle'
+TARGET_CLASS_NAMES = ['car', 'bus', 'truck'] 
 TARGET_CLASS_IDS = []
 missing_classes = []
 for class_name in TARGET_CLASS_NAMES:
@@ -310,7 +282,7 @@ if not TARGET_CLASS_IDS:
 print(f"Tracking target classes: {TARGET_CLASS_NAMES} with IDs: {TARGET_CLASS_IDS}")
 
 
-CONFIDENCE_THRESHOLD = 0.4 # Consider adjusting this threshold
+CONFIDENCE_THRESHOLD = 0.4 
 OUTPUT_JSON_FILE = "result_detect+track.json"
 DISPLAY_WIDTH = 960
 DISPLAY_HEIGHT = 540
@@ -327,12 +299,12 @@ def preprocess_frame_for_ssd(frame_cv2):
 
 def get_detections_from_frame(frame_cv2, current_model, current_device):
     img_tensor_original_shape = preprocess_frame_for_ssd(frame_cv2)
-    img_tensor_device = img_tensor_original_shape.unsqueeze(0).to(current_device) # Add batch dimension
+    img_tensor_device = img_tensor_original_shape.unsqueeze(0).to(current_device) 
 
     raw_detections_data = []
 
     with torch.no_grad():
-        prediction = current_model(img_tensor_device) # Model expects a batch
+        prediction = current_model(img_tensor_device) 
 
     pred_boxes = prediction[0]['boxes'].cpu().numpy()
     pred_labels = prediction[0]['labels'].cpu().numpy()
@@ -340,14 +312,6 @@ def get_detections_from_frame(frame_cv2, current_model, current_device):
 
     h_frame, w_frame = frame_cv2.shape[:2]
     
-    # --- Optional: Debugging point for raw detections ---
-    # print(f"Raw detections this frame (first 5):")
-    # for i in range(min(5, len(pred_scores))):
-    #     label_name_raw = COCO_INSTANCE_CATEGORY_NAMES[pred_labels[i]] if pred_labels[i] < len(COCO_INSTANCE_CATEGORY_NAMES) else "Unknown"
-    #     print(f"  Box: {pred_boxes[i]}, Label: {label_name_raw} ({pred_labels[i]}), Score: {pred_scores[i]:.2f}")
-    # print("----")
-
-
     for i in range(len(pred_scores)):
         if pred_scores[i] >= CONFIDENCE_THRESHOLD and pred_labels[i] in TARGET_CLASS_IDS:
             box = pred_boxes[i]
@@ -366,13 +330,11 @@ def get_detections_from_frame(frame_cv2, current_model, current_device):
                 'class_id': int(label_id),
                 'score': score
             })
-    # print(f"Filtered detections passed to SORT: {len(raw_detections_data)}") # Debug
     return raw_detections_data
 
 
 if __name__ == "__main__":
     dataset_folder = "Dataset"
-    # OUTPUT_VIDEO_FOLDER = "Output_Videos" # Already defined globally
     if not os.path.exists(OUTPUT_VIDEO_FOLDER):
         os.makedirs(OUTPUT_VIDEO_FOLDER)
     all_videos_tracked_results = {}
@@ -380,7 +342,7 @@ if __name__ == "__main__":
 
     for root, dirs, files_in_dir in os.walk(dataset_folder):
         for file_name in files_in_dir:
-            if file_name.lower().endswith(('.mp4', '.avi', '.mkv', '.mov')): # Added more video extensions
+            if file_name.lower().endswith(('.mp4')):
                 full_path = os.path.join(root, file_name)
                 video_files.append(full_path)
 
@@ -395,7 +357,7 @@ if __name__ == "__main__":
         print(f"\n[INFO] Memproses video: {video_path}...")
         print(f"[INFO] Output video akan disimpan ke: {output_video_path}")
 
-        sort_tracker = Sort(max_age=40, min_hits=2, iou_threshold=0.15) # You can tune these
+        sort_tracker = Sort(max_age=40, min_hits=2, iou_threshold=0.15) 
         current_video_tracked_frames_data = []
         video_writer = None
 
@@ -408,12 +370,12 @@ if __name__ == "__main__":
             frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             fps = cap.get(cv2.CAP_PROP_FPS)
-            if fps <= 0: # Handle cases where fps might not be read correctly
+            if fps <= 0: 
                 print(f"Peringatan: FPS video {video_path} adalah {fps}. Menggunakan default FPS = 25.")
                 fps = 25
 
 
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v') # or 'XVID'
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
             video_writer = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
             if not video_writer.isOpened():
                 print(f"Peringatan: Tidak bisa menginisialisasi VideoWriter untuk {output_video_path}. Output video tidak akan disimpan.")
@@ -425,7 +387,7 @@ if __name__ == "__main__":
             continue
 
         frame_id_counter = 0
-        window_name = f'Deteksi Tertrack - {base_video_filename} ({DISPLAY_WIDTH}x{DISPLAY_HEIGHT})' # Use base_video_filename
+        window_name = f'Deteksi Tertrack - {base_video_filename} ({DISPLAY_WIDTH}x{DISPLAY_HEIGHT})' 
 
         while cap.isOpened():
             ret, frame = cap.read()
@@ -443,13 +405,12 @@ if __name__ == "__main__":
                 if tracked_objects_output.shape[0] > 0:
                     for trk_data in tracked_objects_output:
                         try:
-                            # --- MODIFICATION 2: Ensure this conversion is robust (float first) ---
                             x1 = int(float(trk_data[0]))
                             y1 = int(float(trk_data[1]))
                             x2 = int(float(trk_data[2]))
                             y2 = int(float(trk_data[3]))
-                            track_id = int(float(trk_data[4])) # ID should be int
-                            class_id_trk = int(float(trk_data[5])) # Class ID should be int
+                            track_id = int(float(trk_data[4])) 
+                            class_id_trk = int(float(trk_data[5])) 
                             score_trk = float(trk_data[6])
                             label_name_trk = str(trk_data[7])
                         except IndexError:
@@ -494,9 +455,8 @@ if __name__ == "__main__":
                 print(f"Error saat deteksi/tracking pada frame {frame_id_counter} dari video {video_path}: {e}")
                 import traceback
                 traceback.print_exc()
-                # break # Optionally break on error or try to continue
 
-        all_videos_tracked_results[base_video_filename] = current_video_tracked_frames_data # Use base_video_filename as key
+        all_videos_tracked_results[base_video_filename] = current_video_tracked_frames_data 
         cap.release()
         if video_writer:
             video_writer.release()
@@ -504,7 +464,7 @@ if __name__ == "__main__":
 
         # Check if window exists before trying to destroy
         if cv2.getWindowProperty(window_name, cv2.WND_PROP_VISIBLE) >= 1:
-           cv2.destroyWindow(window_name)
+            cv2.destroyWindow(window_name)
         print(f"[INFO] Selesai memproses video: {video_path}")
 
     try:
@@ -517,4 +477,4 @@ if __name__ == "__main__":
         print(f"Error saat menyimpan file JSON: {e}")
 
     print("\n[INFO] Semua proses selesai.")
-    cv2.destroyAllWindows() # Clean up any remaining windows
+    cv2.destroyAllWindows() 

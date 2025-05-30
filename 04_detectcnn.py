@@ -1,6 +1,6 @@
 import torch
 import torchvision
-from torchvision.models.detection import FasterRCNN_ResNet50_FPN_V2_Weights # Changed
+from torchvision.models.detection import FasterRCNN_ResNet50_FPN_V2_Weights
 from PIL import Image
 import cv2
 import numpy as np
@@ -68,16 +68,16 @@ class KalmanBoxTracker(object):
     def __init__(self, bbox_xyxy, class_id, label_name, score):
         self.kf = KalmanFilter(dim_x=7, dim_z=4)
         self.kf.F = np.array([[1,0,0,0,1,0,0],
-                               [0,1,0,0,0,1,0],
-                               [0,0,1,0,0,0,1],
-                               [0,0,0,1,0,0,0],
-                               [0,0,0,0,1,0,0],
-                               [0,0,0,0,0,1,0],
-                               [0,0,0,0,0,0,1]])
+                                [0,1,0,0,0,1,0],
+                                [0,0,1,0,0,0,1],
+                                [0,0,0,1,0,0,0],
+                                [0,0,0,0,1,0,0],
+                                [0,0,0,0,0,1,0],
+                                [0,0,0,0,0,0,1]])
         self.kf.H = np.array([[1,0,0,0,0,0,0],
-                               [0,1,0,0,0,0,0],
-                               [0,0,1,0,0,0,0],
-                               [0,0,0,1,0,0,0]])
+                                [0,1,0,0,0,0,0],
+                                [0,0,1,0,0,0,0],
+                                [0,0,0,1,0,0,0]])
 
         self.kf.R[2:,2:] *= 10.
         self.kf.P[4:,4:] *= 1000.
@@ -132,7 +132,7 @@ class Sort(object):
         self.iou_threshold = iou_threshold
         self.trackers = []
         self.frame_count = 0
-        KalmanBoxTracker.count = 1 # Reset ID for each Sort instance
+        KalmanBoxTracker.count = 1
 
     def update(self, detections_in_frame):
         self.frame_count += 1
@@ -202,7 +202,7 @@ class Sort(object):
             current_bbox = trk.get_state()[0]
 
             if (trk.time_since_update == 0 and trk.hits >= self.min_hits) or \
-               (self.frame_count <= self.min_hits and trk.hits > 0): # Modified from trk.age to trk.hits
+               (self.frame_count <= self.min_hits and trk.hits > 0):
                 ret.append(np.concatenate((current_bbox,
                                            [trk.id, trk.class_id, trk.score, trk.label_name])).reshape(1,-1))
 
@@ -276,7 +276,7 @@ if not TARGET_CLASS_IDS:
 print(f"Tracking target classes: {TARGET_CLASS_NAMES} with IDs: {TARGET_CLASS_IDS}")
 
 
-CONFIDENCE_THRESHOLD = 0.5
+CONFIDENCE_THRESHOLD = 0.65
 DISPLAY_WIDTH = 960
 DISPLAY_HEIGHT = 540
 OUTPUT_VIDEO_FOLDER = "Output_Videos"
@@ -298,6 +298,7 @@ def get_detections_from_frame(frame_cv2, current_model, current_device):
     img_tensor_device = img_tensor_original_shape.unsqueeze(0).to(current_device)
 
     raw_detections_data = []
+    top_edge_threshold = 10
 
     with torch.no_grad():
         prediction = current_model(img_tensor_device)
@@ -309,23 +310,36 @@ def get_detections_from_frame(frame_cv2, current_model, current_device):
     h_frame, w_frame = frame_cv2.shape[:2]
 
     for i in range(len(pred_scores)):
-        if pred_scores[i] >= CONFIDENCE_THRESHOLD and pred_labels[i] in TARGET_CLASS_IDS:
-            box = pred_boxes[i]
-            label_id = pred_labels[i]
+        score = float(pred_scores[i])
+        label_id = int(pred_labels[i])
+        box = pred_boxes[i]
+
+        # Extract coordinates first
+        xmin = max(0, int(box[0]))
+        ymin = max(0, int(box[1]))
+        xmax = min(w_frame, int(box[2]))
+        ymax = min(h_frame, int(box[3]))
+
+        # Now you can use ymin in your condition
+        if ymin > top_edge_threshold and label_id in TARGET_CLASS_IDS and score >= CONFIDENCE_THRESHOLD:
             label_name = COCO_INSTANCE_CATEGORY_NAMES[label_id]
-            score = float(pred_scores[i])
 
-            xmin = max(0, int(box[0]))
-            ymin = max(0, int(box[1]))
-            xmax = min(w_frame, int(box[2]))
-            ymax = min(h_frame, int(box[3]))
+            width = xmax - xmin
+            height = ymax - ymin
+            aspect_ratio = width / (height + 1e-6)
+            area = width * height
 
-            raw_detections_data.append({
-                'box': [xmin, ymin, xmax, ymax],
-                'label': label_name,
-                'class_id': int(label_id),
-                'score': score
-            })
+            min_area = 1000
+            max_aspect = 3
+            min_aspect = 0.5
+
+            if area > min_area and min_aspect < aspect_ratio < max_aspect:
+                raw_detections_data.append({
+                    'box': [xmin, ymin, xmax, ymax],
+                    'label': label_name,
+                    'class_id': label_id,
+                    'score': score
+                })
     return raw_detections_data
 
 
@@ -355,7 +369,7 @@ if __name__ == "__main__":
         print(f"[INFO] Output video akan disimpan ke: {output_video_path}")
         print(f"[INFO] Output JSON akan disimpan ke: {output_json_path}")
 
-        sort_tracker = Sort(max_age=40, min_hits=2, iou_threshold=0.2)
+        sort_tracker = Sort(max_age=40, min_hits=5, iou_threshold=0.3)
         current_video_tracked_frames_data = []
         video_writer = None
         cap = None
@@ -369,11 +383,11 @@ if __name__ == "__main__":
             frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             fps = cap.get(cv2.CAP_PROP_FPS)
-            # --- GET TOTAL FRAME COUNT ---
+
             total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-            if total_frames <= 0: # Handle case where total_frames might not be available
+            if total_frames <= 0:
                 print(f"Peringatan: Tidak bisa mendapatkan total frame untuk {video_path}. Progress tidak akan akurat.")
-                total_frames = -1 # Indicate unavailable total frames
+                total_frames = -1
 
             if fps <= 0:
                 print(f"Peringatan: FPS video {video_path} adalah {fps}. Menggunakan default FPS = 25.")
@@ -391,7 +405,6 @@ if __name__ == "__main__":
             continue
 
         frame_id_counter = 0
-        # window_name = f'Deteksi Tertrack - {base_video_filename} ({DISPLAY_WIDTH}x{DISPLAY_HEIGHT})' # Commented out as per your request for console output
 
         while cap.isOpened():
             ret, frame = cap.read()
@@ -401,7 +414,6 @@ if __name__ == "__main__":
             frame_id_counter += 1
             frame_for_drawing = frame.copy()
 
-            # --- DISPLAY FRAME PROGRESS IN CONSOLE ---
             if total_frames > 0:
                 print(f"\r[INFO] Memproses video: {base_video_filename} - Frame: {frame_id_counter}/{total_frames}", end="")
             else:
@@ -449,18 +461,12 @@ if __name__ == "__main__":
                 if video_writer:
                     video_writer.write(frame_for_drawing)
 
-                # --- Commented out display window as per your preference for console output ---
-                # display_frame = cv2.resize(frame_for_drawing, (DISPLAY_WIDTH, DISPLAY_HEIGHT))
-                # cv2.imshow(window_name, display_frame)
-                # if cv2.waitKey(1) & 0xFF == ord('q'):
-                # print("\nProses dihentikan oleh pengguna untuk video ini.") # Add newline after progress
-                # break
             except Exception as e:
-                print(f"\nError saat deteksi/tracking pada frame {frame_id_counter} dari video {video_path}: {e}") # Add newline after progress
+                print(f"\nError saat deteksi/tracking pada frame {frame_id_counter} dari video {video_path}: {e}")
                 import traceback
                 traceback.print_exc()
 
-        print() # Add a newline after the progress indicator for the current video finishes
+        print()
 
         if cap and cap.isOpened():
             cap.release()
@@ -477,10 +483,6 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Error saat menyimpan file JSON {output_json_path}: {e}")
 
-        # --- Commented out cv2.destroyAllWindows() as window is not shown ---
-        # if cv2.getWindowProperty(window_name, cv2.WND_PROP_VISIBLE) >= 1:
-        # cv2.destroyWindow(window_name)
         print(f"[INFO] Selesai memproses video: {video_path}")
 
     print("\n[INFO] Semua proses selesai.")
-    # cv2.destroyAllWindows() # Ensure all OpenCV windows are closed at the very end if any were created
