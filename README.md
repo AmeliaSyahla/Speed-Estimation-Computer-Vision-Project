@@ -7,7 +7,7 @@
 
 1. Clone repository
   ```bash
-  git clone https://github.com/Amelia-Syahla/Speed-Estimation-Computer-Vision-Project.git
+  git clone https://github.com/AmeliaSyahla/Speed-Estimation-Computer-Vision-Project.git
   cd Speed-Estimation-Computer-Vision-Project
   ```
 2. Activate your virtual environment
