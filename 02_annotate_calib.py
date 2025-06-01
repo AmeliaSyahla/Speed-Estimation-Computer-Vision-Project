@@ -10,7 +10,7 @@ cropping = False
 image = None 
 clone = None 
 
-FRAMES_BASE_DIR = r"D:\Amel Cantik\Semester 4\PKAC - Amelia Syahla Aurellia Sambudi\Final Project CV\Dataset"
+FRAMES_BASE_DIR = r"Dataset"
 
 POINTS_JSON_PATH = "source_material/reference_pts/points.json"
 LINES_JSON_PATH = "source_material/speedDetectionSpots/detectionSpots.json"

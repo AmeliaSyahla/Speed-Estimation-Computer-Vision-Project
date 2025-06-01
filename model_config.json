@@ -1,0 +1,319 @@
+{
+  "videos": [
+    {
+      "name": "Amplaz01a_part_1",
+      "source_video_path": "Dataset/Amplaz01/Amplaz01a_part_1.mp4",
+      "target_video_path": "Output_Videos/Amplaz01a_part_1_output.mp4",
+      "json_path": "Output_Json_Data/Amplaz01a_part_1_tracked_data.json",
+      "homography": {
+        "SOURCE": [[776, 42], [1150, 42], [1628, 1079], [358, 1077]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 55
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "Amplaz01a_part_2",
+      "source_video_path": "Dataset/Amplaz01/Amplaz01a_part_2.mp4",
+      "target_video_path": "Output_Videos/Amplaz01a_part_2_output.mp4",
+      "json_path": "Output_Json_Data/Amplaz01a_part_2_tracked_data.json",
+      "homography": {
+        "SOURCE": [[776, 42], [1150, 42], [1628, 1079], [358, 1077]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 55
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "Amplaz01a_part_3",
+      "source_video_path": "Dataset/Amplaz01/Amplaz01a_part_3.mp4",
+      "target_video_path": "Output_Videos/Amplaz01a_part_3_output.mp4",
+      "json_path": "Output_Json_Data/Amplaz01a_part_3_tracked_data.json",
+      "homography": {
+        "SOURCE": [[776, 42], [1150, 42], [1628, 1079], [358, 1077]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 55
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "Amplaz01a_part_4",
+      "source_video_path": "Dataset/Amplaz01/Amplaz01a_part_4.mp4",
+      "target_video_path": "Output_Videos/Amplaz01a_part_4_output.mp4",
+      "json_path": "Output_Json_Data/Amplaz01a_part_4_tracked_data.json",
+      "homography": {
+        "SOURCE": [[776, 42], [1150, 42], [1628, 1079], [358, 1077]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 55
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "Amplaz01a_part_5",
+      "source_video_path": "Dataset/Amplaz01/Amplaz01a_part_5.mp4",
+      "target_video_path": "Output_Videos/Amplaz01a_part_5_output.mp4",
+      "json_path": "Output_Json_Data/Amplaz01a_part_5_tracked_data.json",
+      "homography": {
+        "SOURCE": [[776, 42], [1150, 42], [1628, 1079], [358, 1077]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 55
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "Amplaz01a_part_6",
+      "source_video_path": "Dataset/Amplaz01/Amplaz01a_part_6.mp4",
+      "target_video_path": "Output_Videos/Amplaz01a_part_6_output.mp4",
+      "json_path": "Output_Json_Data/Amplaz01a_part_6_tracked_data.json",
+      "homography": {
+        "SOURCE": [[776, 42], [1150, 42], [1628, 1079], [358, 1077]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 55
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "Amplaz02a_part_1",
+      "source_video_path": "Dataset/Amplaz02/Amplaz02a_part_1.mp4",
+      "target_video_path": "Output_Videos/Amplaz02a_part_1_output.mp4",
+      "json_path": "Output_Json_Data/Amplaz02a_part_1_tracked_data.json",
+      "homography": {
+        "SOURCE": [[774, 61], [1199, 79], [1597, 1077], [238, 1079]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 53
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "Amplaz02a_part_2",
+      "source_video_path": "Dataset/Amplaz02/Amplaz02a_part_2.mp4",
+      "target_video_path": "Output_Videos/Amplaz02a_part_2_output.mp4",
+      "json_path": "Output_Json_Data/Amplaz02a_part_2_tracked_data.json",
+      "homography": {
+        "SOURCE": [[774, 61], [1199, 79], [1597, 1077], [238, 1079]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 53
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "Amplaz02a_part_3",
+      "source_video_path": "Dataset/Amplaz02/Amplaz02a_part_3.mp4",
+      "target_video_path": "Output_Videos/Amplaz02a_part_3_output.mp4",
+      "json_path": "Output_Json_Data/Amplaz02a_part_3_tracked_data.json",
+      "homography": {
+        "SOURCE": [[774, 61], [1199, 79], [1597, 1077], [238, 1079]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 53
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "Amplaz02a_part_4",
+      "source_video_path": "Dataset/Amplaz02/Amplaz02a_part_4.mp4",
+      "target_video_path": "Output_Videos/Amplaz02a_part_4_output.mp4",
+      "json_path": "Output_Json_Data/Amplaz02a_part_4_tracked_data.json",
+      "homography": {
+        "SOURCE": [[774, 61], [1199, 79], [1597, 1077], [238, 1079]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 53
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "Amplaz02a_part_5",
+      "source_video_path": "Dataset/Amplaz02/Amplaz02a_part_5.mp4",
+      "target_video_path": "Output_Videos/Amplaz02a_part_5_output.mp4",
+      "json_path": "Output_Json_Data/Amplaz02a_part_5_tracked_data.json",
+      "homography": {
+        "SOURCE": [[774, 61], [1199, 79], [1597, 1077], [238, 1079]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 53
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "FKH01a_part_1",
+      "source_video_path": "Dataset/FKH01/FKH01a_part_1.mp4",
+      "target_video_path": "Output_Videos/FKH01a_part_1_output.mp4",
+      "json_path": "Output_Json_Data/FKH01a_part_1_tracked_data.json",
+      "homography": {
+        "SOURCE": [[688,161], [1256, 172], [1912, 1074], [59, 1079]],
+        "TARGET_WIDTH": 12,
+        "TARGET_HEIGHT": 37
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "FKH01a_part_2",
+      "source_video_path": "Dataset/FKH01/FKH01a_part_2.mp4",
+      "target_video_path": "Output_Videos/FKH01a_part_2_output.mp4",
+      "json_path": "Output_Json_Data/FKH01a_part_2_tracked_data.json",
+      "homography": {
+        "SOURCE": [[688,161], [1256, 172], [1912, 1074], [59, 1079]],
+        "TARGET_WIDTH": 12,
+        "TARGET_HEIGHT": 37
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "FKH01a_part_3",
+      "source_video_path": "Dataset/FKH01/FKH01a_part_3.mp4",
+      "target_video_path": "Output_Videos/FKH01a_part_3_output.mp4",
+      "json_path": "Output_Json_Data/FKH01a_part_3_tracked_data.json",
+      "homography": {
+        "SOURCE": [[688,161], [1256, 172], [1912, 1074], [59, 1079]],
+        "TARGET_WIDTH": 12,
+        "TARGET_HEIGHT": 37
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "FKH01a_part_4",
+      "source_video_path": "Dataset/FKH01/FKH01a_part_4.mp4",
+      "target_video_path": "Output_Videos/FKH01a_part_4_output.mp4",
+      "json_path": "Output_Json_Data/FKH01a_part_4_tracked_data.json",
+      "homography": {
+        "SOURCE": [[688,161], [1256, 172], [1912, 1074], [59, 1079]],
+        "TARGET_WIDTH": 12,
+        "TARGET_HEIGHT": 37
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "FKH01a_part_5",
+      "source_video_path": "Dataset/FKH01/FKH01a_part_5.mp4",
+      "target_video_path": "Output_Videos/FKH01a_part_5_output.mp4",
+      "json_path": "Output_Json_Data/FKH01a_part_5_tracked_data.json",
+      "homography": {
+        "SOURCE": [[688,161], [1256, 172], [1912, 1074], [59, 1079]],
+        "TARGET_WIDTH": 12,
+        "TARGET_HEIGHT": 37
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "FKH02a_part_1",
+      "source_video_path": "Dataset/FKH02/FKH02a_part_1.mp4",
+      "target_video_path": "Output_Videos/FKH02a_part_1_output.mp4",
+      "json_path": "Output_Json_Data/FKH02a_part_1_tracked_data.json",
+      "homography": {
+        "SOURCE": [[596, 191], [1317, 199], [1882, 1070], [51, 1070]],
+        "TARGET_WIDTH": 10,
+        "TARGET_HEIGHT": 27
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "FKH02a_part_2",
+      "source_video_path": "Dataset/FKH02/FKH02a_part_2.mp4",
+      "target_video_path": "Output_Videos/FKH02a_part_2_output.mp4",
+      "json_path": "Output_Json_Data/FKH02a_part_2_tracked_data.json",
+      "homography": {
+        "SOURCE": [[596, 191], [1317, 199], [1882, 1070], [51, 1070]],
+        "TARGET_WIDTH": 10,
+        "TARGET_HEIGHT": 27
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "FKH02a_part_3",
+      "source_video_path": "Dataset/FKH02/FKH02a_part_3.mp4",
+      "target_video_path": "Output_Videos/FKH02a_part_3_output.mp4",
+      "json_path": "Output_Json_Data/FKH02a_part_3_tracked_data.json",
+      "homography": {
+        "SOURCE": [[596, 191], [1317, 199], [1882, 1070], [51, 1070]],
+        "TARGET_WIDTH": 10,
+        "TARGET_HEIGHT": 27
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "FKH02a_part_4",
+      "source_video_path": "Dataset/FKH02/FKH02a_part_4.mp4",
+      "target_video_path": "Output_Videos/FKH02a_part_4_output.mp4",
+      "json_path": "Output_Json_Data/FKH02a_part_4_tracked_data.json",
+      "homography": {
+        "SOURCE": [[596, 191], [1317, 199], [1882, 1070], [51, 1070]],
+        "TARGET_WIDTH": 10,
+        "TARGET_HEIGHT": 27
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "FKH02a_part_5",
+      "source_video_path": "Dataset/FKH02/FKH02a_part_5.mp4",
+      "target_video_path": "Output_Videos/FKH02a_part_5_output.mp4",
+      "json_path": "Output_Json_Data/FKH02a_part_5_tracked_data.json",
+      "homography": {
+        "SOURCE": [[596, 191], [1317, 199], [1882, 1070], [51, 1070]],
+        "TARGET_WIDTH": 10,
+        "TARGET_HEIGHT": 27
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    }
+  ]
+}

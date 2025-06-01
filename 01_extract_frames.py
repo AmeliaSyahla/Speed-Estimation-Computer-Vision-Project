@@ -81,7 +81,7 @@ def extract_frames_from_videos(root_video_folder_path, root_output_folder_path, 
 
 
 if __name__ == "__main__":
-    input_videos_directory = r"D:\Amel Cantik\Semester 4\PKAC - Amelia Syahla Aurellia Sambudi\Final Project CV\Dataset"
+    input_videos_directory = r"Dataset"
     output_frames_directory = "frames_dataset"
     interval_seconds = 0.5
 
