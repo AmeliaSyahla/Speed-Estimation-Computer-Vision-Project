@@ -3,20 +3,42 @@ import json
 import numpy as np
 from collections import defaultdict, deque
 import supervision as sv
+#Config
+"""
+#amplaz 1
+SOURCE = np.array([[776, 42], [1150, 42], [1628, 1079], [358, 1077]]) #ganti tergantung tempat
+TARGET_WIDTH = 6 #ganti tergantung tempat
+TARGET_HEIGHT = 55 #ganti tergantung tempat
+
+#amplaz 2
+SOURCE = np.array([[774, 61], [1199, 79], [1597, 1077], [238, 1079]]) 
+TARGET_WIDTH = 6 
+TARGET_HEIGHT = 53
+
+FKH 1
+SOURCE = np.array([[688,161], [1256, 172], [1912, 1074], [59, 1079]]) #ganti tergantung tempat
+TARGET_WIDTH = 12 #ganti tergantung tempat
+TARGET_HEIGHT = 37 #ganti tergantung tempat
+
+FKH 2
+SOURCE = np.array([[596, 191], [1317, 199], [1882, 1070], [51, 1070]]) #ganti tergantung tempat
+TARGET_WIDTH = 10 #ganti tergantung tempat
+TARGET_HEIGHT = 27 #ganti tergantung tempat 
+"""
 
 #KONFIGURASI
-source_video_path = r"Dataset/amplaz01/Amplaz01a_part_4.mp4" #ganti
-target_video_path = r"Output_Videos/amplaz_output_4.mp4" #ganti
-json_path = r"Output_Json_Data/Amplaz01a_part_4_tracked_data.json" #ganti
+source_video_path = r"Dataset/FKH02/FKH02a_part_1.mp4" #ganti
+target_video_path = r"Output_Videos/FKH02a_output_1.mp4" #ganti
+json_path = r"Output_Json_Data/FKH02a_part_1_tracked_data.json" #ganti
 
 
 confidence_threshold = 0.3 #tetap
 iou_threshold = 0.7 #tetap
 
 # Titik homografi
-SOURCE = np.array([[776, 42], [1150, 42], [1628, 1079], [358, 1077]]) #ganti tergantung tempat
-TARGET_WIDTH = 6 #ganti tergantung tempat
-TARGET_HEIGHT = 55 #ganti tergantung tempat
+SOURCE = np.array([[596, 191], [1317, 199], [1882, 1070], [51, 1070]]) #ganti tergantung tempat
+TARGET_WIDTH = 10 #ganti tergantung tempat
+TARGET_HEIGHT = 27 #ganti tergantung tempat
 TARGET = np.array(
     [
         [0, 0],
