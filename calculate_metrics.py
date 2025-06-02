@@ -20,6 +20,13 @@ def calculate_metrics(file_path):
         
         # Clean column names by stripping whitespace and handling potential Excel export issues
         df.columns = df.columns.str.strip()
+
+        # Define the metrics that might be appended
+        metric_names = ["MAE", "RMSE", "MAPE", "R2"]
+
+        # Filter out existing metric rows if they exist
+        if 'Metric' in df.columns:
+            df = df[~df['Metric'].isin(metric_names)].copy()
         
         # Identify the correct columns for ground truth and estimated speed
         # Based on previous read_file output, they are 'Ground Truth' and 'estimated speed'
@@ -83,7 +90,7 @@ def calculate_metrics(file_path):
         return None
 
 if __name__ == "__main__":
-    result_dir = "result"
+    result_dir = "new_result"
     result_files = [f for f in os.listdir(result_dir) if f.endswith(".csv")]
 
     print("Calculating and adding metrics to each result file:")

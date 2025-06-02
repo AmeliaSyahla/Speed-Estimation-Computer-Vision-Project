@@ -1,0 +1,64 @@
+{
+  "videos": [
+    {
+      "name": "Amplaz01a_part_5",
+      "source_video_path": "Dataset/Amplaz01/Amplaz01a_part_5.mp4",
+      "target_video_path": "Output_Videos_New/Amplaz01a_part_5_output.mp4",
+      "json_path": "new_json/Amplaz01a_part_5_tracked_data.json",
+      "homography": {
+        "SOURCE": [[776, 42], [1150, 42], [1628, 1079], [358, 1077]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 30
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "Amplaz02a_part_5",
+      "source_video_path": "Dataset/Amplaz02/Amplaz02a_part_5.mp4",
+      "target_video_path": "Output_Videos_New/Amplaz02a_part_5_output.mp4",
+      "json_path": "new_json/Amplaz02a_part_5_tracked_data.json",
+      "homography": {
+        "SOURCE": [[774, 61], [1199, 79], [1597, 1077], [238, 1079]],
+        "TARGET_WIDTH": 6,
+        "TARGET_HEIGHT": 53
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "FKH01a_part_5",
+      "source_video_path": "Dataset/FKH01/FKH01a_part_5.mp4",
+      "target_video_path": "Output_Videos_New/FKH01a_part_5_output.mp4",
+      "json_path": "new_json/FKH01a_part_5_tracked_data.json",
+      "homography": {
+        "SOURCE": [[688,161], [1256, 172], [1912, 1074], [59, 1079]],
+        "TARGET_WIDTH": 12,
+        "TARGET_HEIGHT": 37
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    },
+    {
+      "name": "FKH02a_part_5",
+      "source_video_path": "Dataset/FKH02/FKH02a_part_5.mp4",
+      "target_video_path": "Output_Videos_New/FKH02a_part_5_output.mp4",
+      "json_path": "new_json/FKH02a_part_5_tracked_data.json",
+      "homography": {
+        "SOURCE": [[596, 191], [1317, 199], [1882, 1070], [51, 1070]],
+        "TARGET_WIDTH": 10,
+        "TARGET_HEIGHT": 27
+      },
+      "processing_params": {
+        "confidence_threshold": 0.3,
+        "iou_threshold": 0.7
+      }
+    }
+  ]
+}
