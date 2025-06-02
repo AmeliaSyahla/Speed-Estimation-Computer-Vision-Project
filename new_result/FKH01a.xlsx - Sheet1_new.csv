@@ -1,0 +1,7 @@
+Index,L/R,Ground Truth,Unnamed: 3,Unnamed: 4,video,index,estimated speed,Unnamed: 8,error,Metric
+670.0,L,23.0,,,part 5,2.0,21.0,,8.695652174,
+717.0,L,27.0,,,part 5,3.0,25.0,,7.407407407,
+,,2.0,,,,,,,,MAE
+,,2.0,,,,,,,,RMSE
+,,8.051529790660226,,,,,,,,MAPE
+,,0.0,,,,,,,,R2
