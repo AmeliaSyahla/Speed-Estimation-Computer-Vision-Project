@@ -1,0 +1,29 @@
+<annotation>
+	<folder></folder>
+	<filename>FKH02a_part_4_frame0006_jpg.rf.c85e06c98ec8f747091370a990e17ac5.jpg</filename>
+	<path>FKH02a_part_4_frame0006_jpg.rf.c85e06c98ec8f747091370a990e17ac5.jpg</path>
+	<source>
+		<database>roboflow.com</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>640</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>car</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<occluded>0</occluded>
+		<bndbox>
+			<xmin>236</xmin>
+			<xmax>290</xmax>
+			<ymin>48</ymin>
+			<ymax>133</ymax>
+		</bndbox>
+	</object>
+	<metadata>
+	</metadata>
+</annotation>

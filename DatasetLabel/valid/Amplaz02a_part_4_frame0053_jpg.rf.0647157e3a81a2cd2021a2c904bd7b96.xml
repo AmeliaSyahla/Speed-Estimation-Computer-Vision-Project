@@ -1,0 +1,16 @@
+<annotation>
+	<folder></folder>
+	<filename>Amplaz02a_part_4_frame0053_jpg.rf.0647157e3a81a2cd2021a2c904bd7b96.jpg</filename>
+	<path>Amplaz02a_part_4_frame0053_jpg.rf.0647157e3a81a2cd2021a2c904bd7b96.jpg</path>
+	<source>
+		<database>roboflow.com</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>640</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<metadata>
+	</metadata>
+</annotation>

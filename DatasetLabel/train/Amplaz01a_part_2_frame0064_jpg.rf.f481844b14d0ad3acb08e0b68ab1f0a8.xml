@@ -1,0 +1,29 @@
+<annotation>
+	<folder></folder>
+	<filename>Amplaz01a_part_2_frame0064_jpg.rf.f481844b14d0ad3acb08e0b68ab1f0a8.jpg</filename>
+	<path>Amplaz01a_part_2_frame0064_jpg.rf.f481844b14d0ad3acb08e0b68ab1f0a8.jpg</path>
+	<source>
+		<database>roboflow.com</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>640</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>car</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<occluded>0</occluded>
+		<bndbox>
+			<xmin>363</xmin>
+			<xmax>422</xmax>
+			<ymin>199</ymin>
+			<ymax>334</ymax>
+		</bndbox>
+	</object>
+	<metadata>
+	</metadata>
+</annotation>

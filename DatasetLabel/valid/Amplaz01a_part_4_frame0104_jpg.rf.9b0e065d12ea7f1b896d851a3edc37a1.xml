@@ -1,0 +1,29 @@
+<annotation>
+	<folder></folder>
+	<filename>Amplaz01a_part_4_frame0104_jpg.rf.9b0e065d12ea7f1b896d851a3edc37a1.jpg</filename>
+	<path>Amplaz01a_part_4_frame0104_jpg.rf.9b0e065d12ea7f1b896d851a3edc37a1.jpg</path>
+	<source>
+		<database>roboflow.com</database>
+	</source>
+	<size>
+		<width>640</width>
+		<height>640</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bus</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<occluded>0</occluded>
+		<bndbox>
+			<xmin>361</xmin>
+			<xmax>418</xmax>
+			<ymin>118</ymin>
+			<ymax>252</ymax>
+		</bndbox>
+	</object>
+	<metadata>
+	</metadata>
+</annotation>
